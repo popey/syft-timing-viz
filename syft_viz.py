@@ -15,28 +15,71 @@ class TaskTiming:
     
 def parse_duration(duration_str: str) -> float:
     """Convert duration string to seconds."""
-    if 'ms' in duration_str:
-        return float(duration_str.replace('ms', '')) / 1000
-    elif 'µs' in duration_str:
-        return float(duration_str.replace('µs', '')) / 1000000
-    elif 's' in duration_str:
-        return float(duration_str.replace('s', ''))
-    return 0
+    if not duration_str:
+        return 0
+
+    try:
+        # Handle minutes format (e.g., "20m47.611789051s")
+        if 'm' in duration_str and 's' in duration_str and not 'ms' in duration_str:
+            minutes_part = duration_str.split('m')[0]
+            seconds_part = duration_str.split('m')[1].rstrip('s')
+            
+            minutes = float(minutes_part)
+            seconds = float(seconds_part) if seconds_part else 0
+            return minutes * 60 + seconds
+            
+        # Handle milliseconds
+        elif 'ms' in duration_str:
+            return float(duration_str.replace('ms', '')) / 1000
+            
+        # Handle microseconds
+        elif 'µs' in duration_str:
+            return float(duration_str.replace('µs', '')) / 1000000
+            
+        # Handle plain seconds
+        elif 's' in duration_str:
+            return float(duration_str.replace('s', ''))
+            
+        return 0
+    except (ValueError, IndexError) as e:
+        print(f"Warning: Could not parse duration: {duration_str} - {str(e)}", file=sys.stderr)
+        return 0
 
 def parse_syft_output(lines: List[str]) -> List[TaskTiming]:
     """Parse syft verbose output into task timings."""
-    pattern = r'task completed elapsed=(\d+\.?\d*(?:ms|µs|s)) task=([^\s]+)'
+    # Two patterns: one for direct syft output, one for library usage
+    patterns = [
+        r'task completed elapsed=([0-9]+\.?[0-9]*(?:m)?(?:[0-9]+\.?[0-9]*)?(?:ms|µs|s)) (?:from-lib=syft )?task=([^\s]+)',
+    ]
     timings = []
     
     for line in lines:
-        match = re.search(pattern, line)
-        if match:
-            duration_str, task_name = match.groups()
-            duration = parse_duration(duration_str)
-            timings.append(TaskTiming(task_name, duration))
+        for pattern in patterns:
+            match = re.search(pattern, line)
+            if match:
+                duration_str, task_name = match.groups()
+                try:
+                    duration = parse_duration(duration_str)
+                    timings.append(TaskTiming(task_name, duration))
+                except ValueError as e:
+                    print(f"Warning: Error parsing line: {line.strip()}", file=sys.stderr)
+                break
     
     return timings
 
+def format_duration(seconds: float) -> str:
+    """Format duration in a human readable way."""
+    if seconds >= 60:
+        minutes = int(seconds // 60)
+        remaining_seconds = seconds % 60
+        return f"{minutes}m{remaining_seconds:.2f}s"
+    elif seconds >= 1:
+        return f"{seconds:.2f}s"
+    elif seconds >= 0.001:
+        return f"{seconds * 1000:.2f}ms"
+    else:
+        return f"{seconds * 1000000:.2f}µs"
+    
 def create_bar_chart(timings: List[TaskTiming], width: int = 40) -> Table:
     """Create a rich table with bar chart visualization."""
     total_time = sum(t.duration for t in timings)
@@ -55,18 +98,10 @@ def create_bar_chart(timings: List[TaskTiming], width: int = 40) -> Table:
             
         bar_length = math.ceil((timing.duration / total_time) * width)
         bar = "█" * bar_length
-        
-        # Format duration string
-        if timing.duration >= 1:
-            duration_str = f"{timing.duration:.2f}s"
-        elif timing.duration >= 0.001:
-            duration_str = f"{timing.duration * 1000:.2f}ms"
-        else:
-            duration_str = f"{timing.duration * 1000000:.2f}µs"
             
         table.add_row(
             timing.name,
-            duration_str,
+            format_duration(timing.duration),
             bar,
             f"{percentage:.1f}%"
         )
