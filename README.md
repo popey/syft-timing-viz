@@ -84,25 +84,25 @@ Note: The `2>&1` is required because Syft sends its verbose output to stderr rat
 ## Example Output
 
 ```
-  file-digest-cataloger                      │ 263.36ms    │ █████████████████████        │ 51.6%
-  dpkg-db-cataloger                          │ 67.86ms     │ ██████                       │ 13.3%
-  file-executable-cataloger                  │ 37.62ms     │ ███                          │ 7.4%
-  relationships-cataloger                    │ 32.88ms     │ ███                          │ 6.4%
-  go-module-binary-cataloger                 │ 20.52ms     │ ██                           │ 4.0%
-  graalvm-native-image-cataloger             │ 20.37ms     │ ██                           │ 4.0%
-  cargo-auditable-binary-cataloger           │ 20.09ms     │ ██                           │ 3.9%
-  elf-binary-package-cataloger               │ 17.09ms     │ ██                           │ 3.3%
-  unknowns-labeler                           │ 10.00ms     │ █                            │ 2.0%
-  file-metadata-cataloger                    │ 9.36ms      │ █                            │ 1.8%
-  binary-classifier-cataloger                │ 6.57ms      │ █                            │ 1.3%
-  nix-store-cataloger                        │ 1.91ms      │ █                            │ 0.4%
-  linux-kernel-cataloger                     │ 929.62µs    │ █                            │ 0.2%
-  environment-cataloger                      │ 853.71µs    │ █                            │ 0.2%
-  portage-cataloger                          │ 88.83µs     │ █                            │ 0.0%
-  alpm-db-cataloger                          │ 76.92µs     │ █                            │ 0.0%
-  java-archive-cataloger                     │ 70.75µs     │ █                            │ 0.0%
-  lua-rock-cataloger                         │ 68.92µs     │ █                            │ 0.0%
-  php-pecl-serialized-cataloger              │ 61.38µs     │ █                            │ 0.0%
+  file-digest-cataloger              │ 263.36ms    │ █████████████████████        │ 51.6%
+  dpkg-db-cataloger                  │ 67.86ms     │ ██████                       │ 13.3%
+  file-executable-cataloger          │ 37.62ms     │ ███                          │ 7.4%
+  relationships-cataloger            │ 32.88ms     │ ███                          │ 6.4%
+  go-module-binary-cataloger         │ 20.52ms     │ ██                           │ 4.0%
+  graalvm-native-image-cataloger     │ 20.37ms     │ ██                           │ 4.0%
+  cargo-auditable-binary-cataloger   │ 20.09ms     │ ██                           │ 3.9%
+  elf-binary-package-cataloger       │ 17.09ms     │ ██                           │ 3.3%
+  unknowns-labeler                   │ 10.00ms     │ █                            │ 2.0%
+  file-metadata-cataloger            │ 9.36ms      │ █                            │ 1.8%
+  binary-classifier-cataloger        │ 6.57ms      │ █                            │ 1.3%
+  nix-store-cataloger                │ 1.91ms      │ █                            │ 0.4%
+  linux-kernel-cataloger             │ 929.62µs    │ █                            │ 0.2%
+  environment-cataloger              │ 853.71µs    │ █                            │ 0.2%
+  portage-cataloger                  │ 88.83µs     │ █                            │ 0.0%
+  alpm-db-cataloger                  │ 76.92µs     │ █                            │ 0.0%
+  java-archive-cataloger             │ 70.75µs     │ █                            │ 0.0%
+  lua-rock-cataloger                 │ 68.92µs     │ █                            │ 0.0%
+  php-pecl-serialized-cataloger      │ 61.38µs     │ █                            │ 0.0%
 ```
 
 ## Files
