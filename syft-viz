@@ -1,0 +1,2 @@
+#!/bin/bash
+syft -v "$@" 2>&1 | python3 ./syft_viz.py
